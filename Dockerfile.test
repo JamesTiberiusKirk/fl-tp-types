@@ -1,0 +1,14 @@
+# For the testing env
+FROM node:15
+
+ARG PAT
+
+RUN mkdir -p /app
+WORKDIR /app
+
+COPY ./.npmrc ./
+COPY ./package*.json ./
+RUN npm install
+RUN rm ./.npmrc
+
+RUN npm run test:ci
