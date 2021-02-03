@@ -7,6 +7,7 @@ declare global {
             DB_PORT: string | undefined;
             DB_USERNAME: string | undefined;
             DB_PASSWORD: string | undefined;
+            JWT_SECRET: string;
         }
     }
 }

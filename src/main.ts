@@ -2,7 +2,8 @@ import * as dotenv from 'dotenv';
 
 import { MicroserviceConfig, ServerConfig, DbConfig } from '@jamestiberiuskirk/fl-shared';
 import { Server } from './server/server';
-import { DbClient } from './db_client/db_client';
+import { DbClient } from './clients/db';
+import { Logger, LoggerConfig } from '@jamestiberiuskirk/fl-shared/dist/lib/logger';
 
 dotenv.config();
 
@@ -10,23 +11,28 @@ dotenv.config();
 const config: MicroserviceConfig = {
     name: process.env.MS_NAME ?? '',
     serverConfig: {
-        port: process.env.HTTP_PORT ?? ''
+        port: process.env.SERVER_PORT ?? ''
     },
     dbConfig: {
         host: process.env.DB_HOST ?? '',
         port: process.env.DB_PORT ?? '',
         database: process.env.DB_NAME ?? '',
-        username: process.env.DB_USERNAME ?? '',
-        password: process.env.DB_PASSWORD ?? ''
-    }
+        username: process.env.DB_USER ?? '',
+        password: process.env.DB_PASSWORD ?? '',
+    },
+    jwt_secret: process.env.JWT_SECRET ?? ''
 }
 
-// tslint:disable-next-line:no-console
-console.log(config);
 
-const db: DbClient = new DbClient(config.dbConfig);
-const httpServer: Server = new Server(config.serverConfig, db);
+const loggerConfig: LoggerConfig = {
+    serviceName: config.name,
+}
 
-httpServer.initServer().then(() => {
 
+const logger: Logger = new Logger(loggerConfig);
+const db: DbClient = new DbClient(config.dbConfig, logger);
+
+db.init().then(() => {
+    const httpServer: Server = new Server(config.serverConfig, db, logger);
+    httpServer.initServer();
 });
