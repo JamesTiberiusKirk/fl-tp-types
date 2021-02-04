@@ -15,7 +15,8 @@ const trackingPointTypesSchema: Schema = new Schema({
     },
     tpName: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     description: {
         type: String,
@@ -23,5 +24,5 @@ const trackingPointTypesSchema: Schema = new Schema({
     }
 });
 
-const TrackingPointTypes: Model<ITrackingPointTypes> = model('TrackingPointTypes', trackingPointTypesSchema);
+const TrackingPointTypes: Model<ITrackingPointTypes> = model('tracking-point-types', trackingPointTypesSchema);
 export default TrackingPointTypes;
