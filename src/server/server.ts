@@ -5,6 +5,7 @@ import { ServerConfig } from '@jamestiberiuskirk/fl-shared';
 
 import { DbClient } from '../clients/db';
 import { Logger } from '@jamestiberiuskirk/fl-shared/dist/lib/logger';
+import { GetTrackingPoints } from './controllers/TrackingPointsTypes';
 
 /**
  * Class for instantiating HTTP server.
@@ -57,6 +58,8 @@ export class Server {
         this.app.get('/', (req, res) => {
             res.send('Hello World');
         });
+
+        this.app.post('/tracking-point-types', GetTrackingPoints);
     }
 
     /**
