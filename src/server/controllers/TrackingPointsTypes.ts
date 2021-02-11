@@ -11,15 +11,18 @@ enum Responses {
 }
 
 export async function GetAllTrackingPoints(req: Request, res: Response) {
-    const userId = res.locals.jwtPayload.id;
-    const query: { [k: string]: any } = { userId };
+    const roles = res.locals.jwtPayload.roles;
+    const query: { [k: string]: any } = {};
+    roles.find('microservices') ?
+        query.userId = req.body.user_id :
+        query.userId = res.locals.jwtPayload._id;
 
-    if (req.query.tpId) query._id = req.query.tp_id;
+    if (req.query.tp_id) query._id = req.query.tp_id;
     if (req.query.tp_name) query.tpName = { $regex: req.query.tp_name };
     if (req.query.description) query.description = { $regex: req.query.description };
 
     const result = await TrackingPointTypes.find(query);
-    res.send(result);
+    return res.send(result);
 }
 
 export function AddTrackingPointTypes(req: Request, res: Response) {
@@ -30,7 +33,7 @@ export function AddTrackingPointTypes(req: Request, res: Response) {
         dataType: req.body.data_type,
     });
 
-    newTrackingPointType.save().then(() => {
+    return newTrackingPointType.save().then(() => {
         return res.send(Responses.Added);
     }).catch((err) => {
         Logger.err(err);
