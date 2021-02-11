@@ -50,10 +50,10 @@ export class Server {
      * Initializing all the routers and routes.
      */
     initRoutes() {
-        this.app.post('/tracking-point-types', AddTrackingPointTypes);
-        this.app.get('/tracking-point-types', GetAllTrackingPoints);
-        this.app.put('/tracking-point-types', UpdateTrackingPointTypes);
-        this.app.delete('/tracking-point-types', DeleteTrackingPointTypes);
+        this.app.post('/', AddTrackingPointTypes);
+        this.app.get('/', GetAllTrackingPoints);
+        this.app.put('/', UpdateTrackingPointTypes);
+        this.app.delete('/', DeleteTrackingPointTypes);
     }
 
     /**
