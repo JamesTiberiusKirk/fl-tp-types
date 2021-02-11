@@ -49,7 +49,7 @@ export async function UpdateTrackingPointTypes(req: Request, res: Response) {
     if (req.body.tp_name) update.tpName = req.body.tp_name;
 
     const data = await TrackingPointTypes.findOneAndUpdate(filter, update);
-    return res.send(data)
+    return res.send(Responses.Updated);
 }
 
 export function DeleteTrackingPointTypes(req: Request, res: Response) {
