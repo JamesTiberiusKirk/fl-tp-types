@@ -1,10 +1,16 @@
 import { Document, Model, model, Schema } from 'mongoose';
 
+export enum DataType {
+    Sets = 'sets',
+    SingleValue = 'single-value',
+}
+
 /* ITrackingPointTypes interface for typescript. */
 export interface ITrackingPointTypes extends Document {
     userId: string;
     tpName: string;
     description: string;
+    dataType: DataType;
 }
 
 /* Mongoose schema. */
@@ -19,8 +25,11 @@ const trackingPointTypesSchema: Schema = new Schema({
         unique: true
     },
     description: {
-        type: String,
-        required: true
+        type: String
+    },
+    dataType: {
+        type: DataType,
+        required:true
     }
 });
 

@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/main.js",
   "scripts": {
-    "start:dev": "nodemon",
+    "start:dev": "nodemon -L",
     "build:prod": "rm -rf ./dist && tsc",
     "start:prod": "node dist/main.js",
     "link:shared": "npm link @jamestiberiuskirk/fl-shared",

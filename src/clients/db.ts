@@ -1,7 +1,7 @@
 import { ConnectionOptions, connect, Connection, disconnect } from "mongoose";
 
 import { DbConfig } from '@jamestiberiuskirk/fl-shared/dist/lib/models/conf.model';
-import { Logger } from '@jamestiberiuskirk/fl-shared/dist/lib/logger';
+import * as  Logger from '@jamestiberiuskirk/fl-shared/dist/lib/Logger';
 
 /**
  * Class for instantiating a HTTP client.
@@ -14,12 +14,8 @@ export class DbClient {
     /* Database connection. */
     conn!: Connection;
 
-    /* Logger instance. */
-    logger: Logger;
-
-    constructor(dbConfig: DbConfig, logger: Logger) {
+    constructor(dbConfig: DbConfig) {
         this.dbConfig = dbConfig;
-        this.logger = logger;
     }
 
     /* Initializes the db connection */
@@ -33,9 +29,9 @@ export class DbClient {
                 useUnifiedTopology: true,
             };
             await connect(mongoURI, options);
-            this.logger.dbLog('Database connected');
+            Logger.dbLog('Database connected');
         } catch (err) {
-            this.logger.dbLog(err.message);
+            Logger.dbErr(err.message);
             process.exit(1);
         }
     };
@@ -47,7 +43,7 @@ export class DbClient {
         }
 
         disconnect().then(() => {
-            this.logger.dbLog('Database disconnected');
+            Logger.dbLog('Database disconnected');
         });
 
     }
