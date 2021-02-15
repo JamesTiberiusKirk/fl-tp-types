@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv';
 
-import { MicroserviceEnvConfig } from '@jamestiberiuskirk/fl-shared/dist/lib/Env';
-import { initStopHandler } from '@jamestiberiuskirk/fl-shared/dist/lib/ProcSigHandlers';
+import { Env, initStopHandler } from '@jamestiberiuskirk/fl-shared';
 import { Server } from './server/server';
 import { DbClient } from './clients/db';
 
@@ -9,7 +8,7 @@ initStopHandler();
 dotenv.config();
 
 
-const config: MicroserviceEnvConfig = new MicroserviceEnvConfig();
+const config: Env.MicroserviceEnvConfig = new Env.MicroserviceEnvConfig();
 
 const db: DbClient = new DbClient(config.dbConfig);
 

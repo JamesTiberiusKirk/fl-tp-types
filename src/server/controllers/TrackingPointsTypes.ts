@@ -13,9 +13,11 @@ enum Responses {
 export async function GetAllTrackingPoints(req: Request, res: Response) {
     const roles = res.locals.jwtPayload.roles;
     const query: { [k: string]: any } = {};
-    roles.find('microservices') ?
+
+    // .find doesnt work
+    roles[0] === 'microservices' ?
         query.userId = req.body.user_id :
-        query.userId = res.locals.jwtPayload._id;
+        query.userId = res.locals.jwtPayload.id;
 
     if (req.query.tp_id) query._id = req.query.tp_id;
     if (req.query.tp_name) query.tpName = { $regex: req.query.tp_name };

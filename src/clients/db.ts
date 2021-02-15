@@ -1,7 +1,6 @@
-import { ConnectionOptions, connect, Connection, disconnect } from "mongoose";
+import { ConnectionOptions, connect, Connection, disconnect } from 'mongoose';
 
-import { DbConfig } from '@jamestiberiuskirk/fl-shared/dist/lib/models/conf.model';
-import * as  Logger from '@jamestiberiuskirk/fl-shared/dist/lib/Logger';
+import { Logger, Conf} from '@jamestiberiuskirk/fl-shared';
 
 /**
  * Class for instantiating a HTTP client.
@@ -9,12 +8,12 @@ import * as  Logger from '@jamestiberiuskirk/fl-shared/dist/lib/Logger';
 export class DbClient {
 
     /* Database config. */
-    dbConfig: DbConfig;
+    dbConfig: Conf.DbConfig;
 
     /* Database connection. */
     conn!: Connection;
 
-    constructor(dbConfig: DbConfig) {
+    constructor(dbConfig: Conf.DbConfig) {
         this.dbConfig = dbConfig;
     }
 

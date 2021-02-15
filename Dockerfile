@@ -1,7 +1,10 @@
 # For the building env
-FROM node:15-slim as builder
+FROM node:current-slim as builder
 
 ARG PAT
+ENV PAT=${PAT}
+RUN export PAT=$PAT
+RUN echo $PAT
 
 RUN mkdir -p /app
 WORKDIR /app
@@ -17,7 +20,7 @@ COPY . ./
 RUN npm run build:prod
 
 # For building the prod container with the transpalied js
-FROM node:15-slim
+FROM node:current-slim
 
 WORKDIR /usr/src/app
 

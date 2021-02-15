@@ -1,12 +1,16 @@
 import morgan from 'morgan';
 import * as bodyParser from 'body-parser';
 import express, { NextFunction, Response, Request, Express } from 'express';
-import { ServerConfig } from '@jamestiberiuskirk/fl-shared/dist/lib/models/conf.model';
-import * as  Logger from '@jamestiberiuskirk/fl-shared/dist/lib/Logger';
-import { authMiddleware } from '@jamestiberiuskirk/fl-shared/dist/lib/JwtWrapper';
-import { getMsName } from '@jamestiberiuskirk/fl-shared/dist/lib/Env';
-import { AddTrackingPointTypes, DeleteTrackingPointTypes, GetAllTrackingPoints, UpdateTrackingPointTypes } from './controllers/TrackingPointsTypes';
+
+import { Conf, Env, Logger, JwtWrapper } from '@jamestiberiuskirk/fl-shared';
+
 import { DbClient } from '../clients/db';
+import {
+    AddTrackingPointTypes,
+    DeleteTrackingPointTypes,
+    GetAllTrackingPoints,
+    UpdateTrackingPointTypes
+} from './controllers/TrackingPointsTypes';
 
 /**
  * Class for instantiating HTTP server.
@@ -14,7 +18,7 @@ import { DbClient } from '../clients/db';
 export class Server {
 
     /* Server conf. */
-    conf: ServerConfig;
+    conf: Conf.ServerConfig;
 
     /* The Express app. */
     app: Express;
@@ -26,7 +30,7 @@ export class Server {
      * Constructor.
      * @param conf Server config
      */
-    constructor(conf: ServerConfig, db: DbClient) {
+    constructor(conf: Conf.ServerConfig, db: DbClient) {
         this.conf = conf;
         this.app = express();
         this.db = db;
@@ -62,7 +66,7 @@ export class Server {
     initMiddleware() {
         this.disableServerCors();
 
-        this.app.use(morgan(`[${getMsName().toUpperCase()}]: [HTTP]: :method :url :status :res[content-length] kb - :response-time ms`));
+        this.app.use(morgan(`[${Env.getMsName().toUpperCase()}]: [HTTP]: :method :url :status :res[content-length] kb - :response-time ms`));
         this.app.use(bodyParser.json());
 
         // Injecting the database and the logger into each request
@@ -71,7 +75,7 @@ export class Server {
             next();
         });
 
-        this.app.use(authMiddleware);
+        this.app.use(JwtWrapper.authMiddleware);
     }
 
 
