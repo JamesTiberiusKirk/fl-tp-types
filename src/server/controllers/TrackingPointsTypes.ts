@@ -10,6 +10,22 @@ enum Responses {
     CannotUpdateDataType = 'Cannot Update Tracking Point Data Type'
 }
 
+/**
+ * GET express controller for "/" .
+ * Can provide search queries and it will return an array of matches,
+ *   based on the ID found in the jwt payload or the user id in case
+ *   the request was done by another microservice with the appropriate
+ *   JWT token.
+ *
+ * Possible queries (delivered by URL params.)
+ *   - user_id: used for for internal uses
+ *   - tp_ip: tracking point id
+ *   - tp_name: tracking point name
+ *   - description: description for tracking point types.
+ *
+ * @param req
+ * @param res
+ */
 export async function GetAllTrackingPoints(req: Request, res: Response) {
     const roles = res.locals.jwtPayload.roles;
     const query: { [k: string]: any } = {};
@@ -27,6 +43,17 @@ export async function GetAllTrackingPoints(req: Request, res: Response) {
     return res.send(result);
 }
 
+/**
+ * POST express controller for "/".
+ * Adds a new tracking point type.
+ *
+ * Post body data:
+ *   - tp_name: tracking point name
+ *   - description: description for the tracking point
+ *   - data_type: enum of the kind of data to be stored (options: "single-value", "sets")
+ * @param req
+ * @param res
+ */
 export function AddTrackingPointTypes(req: Request, res: Response) {
     const newTrackingPointType: ITrackingPointTypes = new TrackingPointTypes({
         userId: res.locals.jwtPayload.id,
@@ -43,6 +70,20 @@ export function AddTrackingPointTypes(req: Request, res: Response) {
     });
 }
 
+/**
+ * PUT express controller for "/".
+ * Updates existing document.
+ * Provide a body of data with the data wanted to be updated,
+ *   of course provide the id.
+ *
+ * Put body optional data:
+ *   - tp_name: tracking point name
+ *   - description: description for the tracking point
+ *   - data_type: enum of the kind of data to be stored (options: "single-value", "sets")
+ *
+ * @param req
+ * @param res
+ */
 export async function UpdateTrackingPointTypes(req: Request, res: Response) {
     const filter: { [k: string]: any } = {};
     const update: { [k: string]: any } = {};
@@ -57,6 +98,15 @@ export async function UpdateTrackingPointTypes(req: Request, res: Response) {
     return res.send(Responses.Updated);
 }
 
+/**
+ * DELETE express controller for "/".
+ * Deletes a document based on the id provided in the body.
+ *
+ * Body data:
+ *   - tp_id: id of the record to delete.
+ * @param req
+ * @param res
+ */
 export function DeleteTrackingPointTypes(req: Request, res: Response) {
     const filter: { [k: string]: any } = {};
     if (res.locals.jwtPayload.id) filter.userId = res.locals.jwtPayload.id;
