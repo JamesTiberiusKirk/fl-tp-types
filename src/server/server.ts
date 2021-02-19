@@ -28,7 +28,7 @@ export class Server {
 
     /**
      * Constructor.
-     * @param conf Server config
+     * @param conf Server config.
      */
     constructor(conf: Conf.ServerConfig, db: DbClient) {
         this.conf = conf;
