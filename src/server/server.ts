@@ -1,8 +1,12 @@
-import morgan from 'morgan';
 import * as bodyParser from 'body-parser';
 import express, { NextFunction, Response, Request, Express } from 'express';
 
-import { Conf, Env, Logger, JwtWrapper } from '@jamestiberiuskirk/fl-shared';
+import {
+    Conf,
+    Logger,
+    JwtWrapper,
+    GetMorganMiddleware
+} from '@jamestiberiuskirk/fl-shared';
 
 import { DbClient } from '../clients/db';
 import {
@@ -66,7 +70,7 @@ export class Server {
     initMiddleware() {
         this.disableServerCors();
 
-        this.app.use(morgan(`[${Env.getMsName().toUpperCase()}]: [HTTP]: :method :url :status :res[content-length] kb - :response-time ms`));
+        this.app.use(GetMorganMiddleware());
         this.app.use(bodyParser.json());
 
         // Injecting the database and the logger into each request
