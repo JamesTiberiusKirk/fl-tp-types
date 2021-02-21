@@ -5,7 +5,7 @@ import {
     Conf,
     Logger,
     JwtWrapper,
-    GetMorganMiddleware
+    Misc
 } from '@jamestiberiuskirk/fl-shared';
 
 import { DbClient } from '../clients/db';
@@ -70,7 +70,7 @@ export class Server {
     initMiddleware() {
         this.disableServerCors();
 
-        this.app.use(GetMorganMiddleware());
+        this.app.use(Misc.GetMorganMiddleware());
         this.app.use(bodyParser.json());
 
         // Injecting the database and the logger into each request

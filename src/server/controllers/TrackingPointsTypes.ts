@@ -32,7 +32,7 @@ export async function GetAllTrackingPoints(req: Request, res: Response) {
 
     // .find doesnt work
     roles[0] === 'microservices' ?
-        query.userId = req.body.user_id :
+        query.userId = req.query.user_id :
         query.userId = res.locals.jwtPayload.id;
 
     if (req.query.tp_id) query._id = req.query.tp_id;
