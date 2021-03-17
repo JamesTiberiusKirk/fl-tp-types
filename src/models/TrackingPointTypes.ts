@@ -11,6 +11,7 @@ export interface ITrackingPointTypes extends Document {
     tpName: string;
     description: string;
     dataType: DataType;
+    measurementUnit: string;
 }
 
 /* Mongoose schema. */
@@ -29,7 +30,11 @@ const trackingPointTypesSchema: Schema = new Schema({
     },
     dataType: {
         type: DataType,
-        required:true
+        required: true
+    },
+    measurementUnit: {
+        type: String,
+        required: true
     }
 });
 

@@ -19,7 +19,7 @@ enum Responses {
  *
  * Possible queries (delivered by URL params.)
  *   - user_id: used for for internal uses
- *   - tp_ip: tracking point id
+ *   - tp_id: tracking point id
  *   - tp_name: tracking point name
  *   - description: description for tracking point types.
  *
@@ -31,7 +31,7 @@ export async function GetAllTrackingPoints(req: Request, res: Response) {
     const query: { [k: string]: any } = {};
 
     // .find doesnt work
-    roles[0] === 'microservices' ?
+    roles[0] === 'microservice' ?
         query.userId = req.query.user_id :
         query.userId = res.locals.jwtPayload.id;
 
@@ -51,6 +51,7 @@ export async function GetAllTrackingPoints(req: Request, res: Response) {
  *   - tp_name: tracking point name
  *   - description: description for the tracking point
  *   - data_type: enum of the kind of data to be stored (options: "single-value", "sets")
+ *   - measurement_unit: some unit of measurment
  * @param req
  * @param res
  */
@@ -60,6 +61,7 @@ export function AddTrackingPointTypes(req: Request, res: Response) {
         tpName: req.body.tp_name,
         description: req.body.description,
         dataType: req.body.data_type,
+        measurementUnit: req.body.measurement_unit,
     });
 
     return newTrackingPointType.save().then(() => {
@@ -93,6 +95,7 @@ export async function UpdateTrackingPointTypes(req: Request, res: Response) {
     if (req.body.data_type) return res.status(400).send(Responses.CannotUpdateDataType);
     if (req.body.description) update.description = req.body.description;
     if (req.body.tp_name) update.tpName = req.body.tp_name;
+    if (req.body.measurement_unit) update.measurmentUnit = req.body.measurement_unit;
 
     const data = await TrackingPointTypes.findOneAndUpdate(filter, update);
     return res.send(Responses.Updated);
