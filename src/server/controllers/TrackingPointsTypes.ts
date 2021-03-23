@@ -55,21 +55,22 @@ export async function GetAllTrackingPoints(req: Request, res: Response) {
  * @param req
  * @param res
  */
-export function AddTrackingPointTypes(req: Request, res: Response) {
+export async function AddTrackingPointTypes(req: Request, res: Response) {
     const newTrackingPointType: ITrackingPointTypes = new TrackingPointTypes({
         userId: res.locals.jwtPayload.id,
-        tpName: req.body.tp_name,
+        tpName: req.body.tpName,
         description: req.body.description,
-        dataType: req.body.data_type,
-        measurementUnit: req.body.measurement_unit,
+        dataType: req.body.dataType,
+        measurementUnit: req.body.measurementUnit,
     });
 
-    return newTrackingPointType.save().then(() => {
+    try{
+        await newTrackingPointType.save();
         return res.send(Responses.Added);
-    }).catch((err) => {
+    } catch (err) {
         Logger.err(err);
         return res.send(err);
-    });
+    }
 }
 
 /**
@@ -90,34 +91,43 @@ export async function UpdateTrackingPointTypes(req: Request, res: Response) {
     const filter: { [k: string]: any } = {};
     const update: { [k: string]: any } = {};
 
-    if (res.locals.jwtPayload.id) filter.userId = res.locals.jwtPayload.id;
-    if (req.body.tp_id) filter._id = req.body.tp_id;
-    if (req.body.data_type) return res.status(400).send(Responses.CannotUpdateDataType);
-    if (req.body.description) update.description = req.body.description;
-    if (req.body.tp_name) update.tpName = req.body.tp_name;
-    if (req.body.measurement_unit) update.measurmentUnit = req.body.measurement_unit;
+    const updateType = req.body;
 
-    const data = await TrackingPointTypes.findOneAndUpdate(filter, update);
-    return res.send(Responses.Updated);
+    if (res.locals.jwtPayload.id) filter.userId = res.locals.jwtPayload.id;
+    if (updateType.tpId) filter._id = updateType.tpId;
+    // if (updateType.dataType) return res.status(400).send(Responses.CannotUpdateDataType);
+    if (updateType.description) update.description = updateType.description;
+    if (updateType.tpName) update.tpName = updateType.tpName;
+    if (updateType.measurementUnit) update.measurmentUnit = updateType.measurementUnit;
+
+    try {
+        await TrackingPointTypes.findOneAndUpdate(filter, update);
+        return res.send(Responses.Updated);
+    } catch (err){
+        Logger.err(err);
+        return res.send(err);
+    }
 }
 
 /**
  * DELETE express controller for "/".
  * Deletes a document based on the id provided in the body.
  *
- * Body data:
+ * Param data:
  *   - tp_id: id of the record to delete.
  * @param req
  * @param res
  */
-export function DeleteTrackingPointTypes(req: Request, res: Response) {
+export async function DeleteTrackingPointTypes(req: Request, res: Response) {
     const filter: { [k: string]: any } = {};
     if (res.locals.jwtPayload.id) filter.userId = res.locals.jwtPayload.id;
-    if (req.body.tp_id) filter._id = req.body.tp_id;
+    if (req.query.tp_id) filter._id = req.query.tp_id;
 
-    TrackingPointTypes.findByIdAndDelete(filter).then(() => {
+    try {
+        await TrackingPointTypes.findByIdAndDelete(filter);
         return res.send(Responses.Deleted);
-    }).catch(err => {
+    } catch (err){
+        Logger.err(err);
         return res.status(500).send(err);
-    });
+    }
 }
